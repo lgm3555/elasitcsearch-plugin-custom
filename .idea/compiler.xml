@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="elasticsearch-plugin-custom" />
+        <module name="elasitcsearch-plugin-custom" />
       </profile>
     </annotationProcessing>
   </component>

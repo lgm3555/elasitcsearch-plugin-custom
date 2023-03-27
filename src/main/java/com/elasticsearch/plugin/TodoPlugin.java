@@ -1,6 +1,6 @@
 package com.elasticsearch.plugin;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -15,7 +15,7 @@ import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
-public class ExamplePlugin extends Plugin implements ActionPlugin {
+public class TodoPlugin extends Plugin implements ActionPlugin {
     @Override
     public List<RestHandler> getRestHandlers(final Settings settings,
                                              final RestController restController,
@@ -24,6 +24,6 @@ public class ExamplePlugin extends Plugin implements ActionPlugin {
                                              final SettingsFilter settingsFilter,
                                              final IndexNameExpressionResolver indexNameExpressionResolver,
                                              final Supplier<DiscoveryNodes> nodesInCluster) {
-        return Arrays.asList(new ExampleNocodeAction(settings, restController));
+        return Collections.singletonList(new TodoPluginAction());
     }
 }
