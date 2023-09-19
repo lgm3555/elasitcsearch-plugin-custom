@@ -1,12 +1,18 @@
 package com.elasticsearch.plugin;
 
 import com.elasticsearch.plugin.util.CustomClient;
+import org.apache.lucene.util.QueryBuilder;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.json.JsonXContent;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.BytesRestResponse;
 import org.elasticsearch.rest.RestRequest;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -64,17 +70,6 @@ public class TodoPluginAction extends BaseRestHandler {
     }
 
     private void joinAction(RestRequest request, NodeClient client, String index) {
-        /*
-        POST prod/_join
-        {
-            "targetIndex": "prod_detail",
-            "query": {
-                "match": {
-                    "prodCode": "1511111"
-                }
-            }
-        }
-        */
         JSONObject requestBody = new JSONObject(new JSONTokener(request.content().utf8ToString()));
 
         String host = requestBody.optString("host", null);
@@ -82,9 +77,16 @@ public class TodoPluginAction extends BaseRestHandler {
         String username = requestBody.optString("username", null);
         String password = requestBody.optString("password", null);
         String joinIndex = requestBody.optString("joinIndex", null);
+        String query = requestBody.optString("query");
 
-        CustomClient customClient = new CustomClient(client.settings(), client.threadPool(), index, joinIndex, host, port, username, password);
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(index).source(SearchSourceBuilder.searchSource().query(QueryBuilders.wrapperQuery(query)));
 
-        //customClient.search()
+        CustomClient customClient = new CustomClient(client.settings(), client.threadPool(), host, port, username, password);
+
+        SearchResponse searchResponse = customClient.search(searchRequest).actionGet();
+        for(SearchHit hit : searchResponse.getHits().getHits()){
+            System.out.println("hit = " + hit);
+        }
     }
 }
