@@ -1,7 +1,5 @@
-package com.elasticsearch.plugin;
+package com.elasticsearch.plugin.action;
 
-import com.elasticsearch.plugin.util.CustomClient;
-import org.apache.lucene.util.QueryBuilder;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.node.NodeClient;
@@ -23,26 +21,24 @@ import java.util.Date;
 import java.util.List;
 
 import static org.elasticsearch.rest.RestRequest.Method.GET;
-import static org.elasticsearch.rest.RestRequest.Method.POST;
 import static org.elasticsearch.rest.RestStatus.OK;
 
 public class TodoPluginAction extends BaseRestHandler {
 
     private static final String TEST_ACTION = "_nocode";
-    private static final String TEST_SEARCH_ACTION = "_test-search";
+    private static final String BASE_URI = "_custom";
     private static final String TRAN_SEARCH_ACTION = "_tran";
     private static final String INDEX_JOIN_ACTION = "_join";
 
     @Override
     public List<Route> routes() {
         return Collections.unmodifiableList(Arrays.asList(
-                new Route(GET, "/{action}"),
-                new Route(POST, "/{index}/{action}")));
+                new Route(GET, BASE_URI + "/{action}")));
     }
 
     @Override
     public String getName() {
-        return "todo-plugin";
+        return "custom-analysis";
     }
 
     @Override
@@ -55,15 +51,12 @@ public class TodoPluginAction extends BaseRestHandler {
             builder.startObject();
             builder.field("description", "Elasticsearch-todo-plugin-custom response\n: " + new Date().toString());
             builder.endObject();
-        } else if (TEST_SEARCH_ACTION.equals(action)) {
-
         } else if (TRAN_SEARCH_ACTION.equals(action)) { //영한 변경
             final String index = request.param("index");
 
         } else if (INDEX_JOIN_ACTION.equals(action)) { //left join
             final String index = request.param("index");
 
-            joinAction(request, client, index);
         }
 
         return channel -> channel.sendResponse(new BytesRestResponse(OK, builder));

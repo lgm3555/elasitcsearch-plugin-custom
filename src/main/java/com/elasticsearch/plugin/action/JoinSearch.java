@@ -1,4 +1,4 @@
-package com.elasticsearch.plugin.util;
+package com.elasticsearch.plugin.action;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

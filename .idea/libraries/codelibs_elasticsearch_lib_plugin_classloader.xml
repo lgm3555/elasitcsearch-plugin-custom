@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="codelibs.elasticsearch.lib.plugin.classloader" type="repository">
+    <properties maven-id="org.codelibs.elasticsearch.lib:plugin-classloader:7.8.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codelibs/elasticsearch/lib/plugin-classloader/7.8.0/plugin-classloader-7.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
