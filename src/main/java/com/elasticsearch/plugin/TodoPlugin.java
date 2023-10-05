@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.elasticsearch.plugin.action.TodoPluginAction;
+import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.ClusterSettings;
 import org.elasticsearch.common.settings.IndexScopedSettings;
 import org.elasticsearch.common.settings.Settings;
@@ -24,6 +26,8 @@ import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
 public class TodoPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
+
+    private static Logger logger = Loggers.getLogger(TodoPlugin.class, "");
 
     /**
      * 필터 등록
