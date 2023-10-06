@@ -1,11 +1,13 @@
 package com.elasticsearch.plugin;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import com.elasticsearch.plugin.action.TodoPluginAction;
+import com.elasticsearch.plugin.filter.TodoPluginFilter;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
@@ -19,13 +21,15 @@ import org.elasticsearch.index.analysis.AnalyzerProvider;
 import org.elasticsearch.index.analysis.TokenFilterFactory;
 import org.elasticsearch.index.analysis.TokenizerFactory;
 import org.elasticsearch.indices.analysis.AnalysisModule;
+import org.elasticsearch.ingest.Processor;
 import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.AnalysisPlugin;
+import org.elasticsearch.plugins.IngestPlugin;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
-public class TodoPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
+public class TodoPlugin extends Plugin implements AnalysisPlugin, ActionPlugin, IngestPlugin {
 
     private static Logger logger = Loggers.getLogger(TodoPlugin.class, "");
 
@@ -34,7 +38,9 @@ public class TodoPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
      */
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<TokenFilterFactory>> getTokenFilters() {
-        return AnalysisPlugin.super.getTokenFilters();
+        Map<String, AnalysisModule.AnalysisProvider<TokenFilterFactory>> extra = new HashMap<>();
+        extra.put("custom", TodoPluginFilter::new);
+        return extra;
     }
 
     /**
@@ -51,6 +57,14 @@ public class TodoPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
         return AnalysisPlugin.super.getAnalyzers();
+    }
+
+    /**
+     * 전처리 등록
+     */
+    @Override
+    public Map<String, Processor.Factory> getProcessors(Processor.Parameters parameters) {
+        return IngestPlugin.super.getProcessors(parameters);
     }
 
     /**
