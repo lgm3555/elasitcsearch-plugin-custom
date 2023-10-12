@@ -1,6 +1,7 @@
 package com.elasticsearch.plugin.filter;
 
 import com.elasticsearch.plugin.TodoPlugin;
+import com.elasticsearch.plugin.util.BaseDictInfo;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.TokenStream;
 import org.elasticsearch.common.logging.Loggers;
@@ -15,6 +16,10 @@ public class TodoPluginFilter extends AbstractTokenFilterFactory {
 
     public TodoPluginFilter(IndexSettings indexSettings, Environment environment, String name, Settings settings) {
         super(indexSettings, name, settings);
+
+        if (!TodoPlugin.dictMap.containsKey(BaseDictInfo.BASE_DICTIONARY)) {
+            TodoPlugin.dictMap = BaseDictInfo.loadDictionary(environment);
+        }
     }
 
     @Override
